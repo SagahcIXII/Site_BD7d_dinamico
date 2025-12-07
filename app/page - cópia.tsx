@@ -1,7 +1,7 @@
 import { HeroParallax } from "@/components/ui/hero-parallax";
 import { Navbar } from "@/components/ui/navbar";
 import { Footer } from "@/components/ui/footer";
-import { Sections } from "@/components/ui/sections"; // ⬅️ NOVO
+import { Sections } from "@/components/ui/sections";
 
 type Product = {
   title: string;
@@ -75,14 +75,15 @@ const products: Product[] = [
 export default function Home() {
   return (
     <main className="bg-gradient-to-b from-black via-slate-950 to-black min-h-screen text-white">
+      {/* Navbar fixa no topo */}
       <Navbar />
 
+      {/* Hero com efeito parallax usando os produtos/serviços da BD7D */}
       <section className="pt-20">
         <HeroParallax products={products} />
       </section>
 
-      {/* Seções principais do site */}
-      <Sections />
+      {/* Aqui depois você pode adicionar seções de serviços, cases, contato, etc. */}
 
       <Footer />
     </main>

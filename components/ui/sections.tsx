@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { SplineScene } from "@/components/ui/splite";
 
 export const Sections = () => {
   return (
@@ -9,6 +10,7 @@ export const Sections = () => {
       <ConstrucaoSection />
       <PerformanceSection />
       <CasesSection />
+      <RobotSection /> 
     </>
   );
 };
@@ -247,6 +249,52 @@ const CasesSection = () => (
         >
           Conversar sobre um novo case
         </Link>
+      </div>
+    </div>
+  </section>
+);
+
+/* ========================== SEÇÃO ROBO ========================== */
+const RobotSection = () => (
+  <section className="w-full py-24 bg-black">
+    <div className="max-w-7xl mx-auto px-4">
+      <div className="relative w-full h-[480px] md:h-[520px] rounded-xl border border-neutral-800 bg-black/90 overflow-hidden flex flex-col md:flex-row">
+
+
+        {/* Texto à esquerda */}
+        <div className="flex-1 p-10 flex flex-col justify-center z-10">
+          <p className="text-xs tracking-[0.25em] text-emerald-400 uppercase mb-3">
+            Assistente 3D BD7D
+          </p>
+
+          <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+            Experiência 3D interativa<br />
+            aplicada à engenharia.
+          </h2>
+
+          <p className="mt-4 text-neutral-300 max-w-md">
+            Nosso robô 3D representa a união de engenharia, automação e visão
+            técnica aplicada a mesma lógica por trás das entregas da BD7D Solutions.
+          </p>
+
+          <div className="mt-6">
+            <a
+              href="https://wa.me/5592981649981?text=Olá,%20gostaria%20de%20entender%20como%20a%20BD7D%20pode%20me%20ajudar%20em%20um%20case%20similar."
+              className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium bg-emerald-500 text-black hover:bg-emerald-400 transition"
+            >
+              Conversar com a equipe
+            </a>
+          </div>
+        </div>
+
+        {/* Robô em Spline */}
+        <div className="flex-1 relative">
+          <SplineScene
+            scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+            className="w-full h-full"
+          />
+        </div>
+
       </div>
     </div>
   </section>

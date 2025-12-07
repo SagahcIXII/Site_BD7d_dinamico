@@ -105,7 +105,7 @@ const EnergiaSection = () => (
         uma alavanca de competitividade para sua operação.
       </p>
       <Link
-        href="https://wa.me/5592999999999?text=Olá,%20quero%20otimizar%20a%20gestão%20de%20energia%20da%20minha%20empresa."
+        href="https://wa.me/5592981649981?text=Olá,%20quero%20otimizar%20a%20gestão%20de%20energia%20da%20minha%20empresa."
         className="rounded-full bg-emerald-500 px-5 py-2 text-xs md:text-sm font-semibold text-black shadow-lg shadow-emerald-500/40 hover:bg-emerald-400 transition"
       >
         Falar sobre energia com a BD7D
@@ -146,7 +146,7 @@ const ConstrucaoSection = () => (
         da segurança e da experiência de quem ocupa o espaço.
       </p>
       <Link
-        href="https://wa.me/5592999999999?text=Olá,%20quero%20avaliar%20um%20projeto%20de%20galpão%20ou%20reforma%20com%20a%20BD7D."
+        href="https://wa.me/5592981649981?text=Olá,%20quero%20avaliar%20um%20projeto%20de%20galpão%20ou%20reforma%20com%20a%20BD7D."
         className="rounded-full bg-emerald-500 px-5 py-2 text-xs md:text-sm font-semibold text-black shadow-lg shadow-emerald-500/40 hover:bg-emerald-400 transition"
       >
         Discutir um projeto de obra
@@ -187,7 +187,7 @@ const PerformanceSection = () => (
         peça estratégica para proteger margem, disponibilidade e qualidade.
       </p>
       <Link
-        href="https://wa.me/5592999999999?text=Olá,%20quero%20melhorar%20os%20KPIs%20e%20a%20automação%20da%20minha%20operação."
+        href="https://wa.me/5592981649981?text=Olá,%20quero%20melhorar%20os%20KPIs%20e%20a%20automação%20da%20minha%20operação."
         className="rounded-full bg-emerald-500 px-5 py-2 text-xs md:text-sm font-semibold text-black shadow-lg shadow-emerald-500/40 hover:bg-emerald-400 transition"
       >
         Acelerar a performance com a BD7D
@@ -242,7 +242,7 @@ const CasesSection = () => (
           Quer avaliar se faz sentido construir um case assim na sua operação?
         </p>
         <Link
-          href="https://wa.me/5592999999999?text=Olá,%20gostaria%20de%20entender%20como%20a%20BD7D%20pode%20me%20ajudar%20em%20um%20case%20similar."
+          href="https://wa.me/5592981649981?text=Olá,%20gostaria%20de%20entender%20como%20a%20BD7D%20pode%20me%20ajudar%20em%20um%20case%20similar."
           className="rounded-full bg-transparent border border-emerald-400 px-5 py-2 text-xs md:text-sm font-semibold text-emerald-300 hover:bg-emerald-500/10 transition"
         >
           Conversar sobre um novo case

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ScrollHero } from "@/components/scroll-hero";
 import { SiteNav } from "@/components/site-nav";
 import { RevealObserver } from "@/components/reveal-observer";
+import { BimReveal } from "@/components/bim-reveal";
 import { EMAIL, LINKEDIN, whatsappLink } from "@/lib/contact";
 
 const diferenciais = [
@@ -30,8 +31,10 @@ const pilares = [
   },
   {
     id: "construcao",
-    imagem: "/images/galpao-industrial.jpg",
-    alt: "Galpão industrial",
+    imagem: "/images/construcao-obra.jpg",
+    /* modelo BIM alinhado à foto: o card revela projeto → obra */
+    imagemProjeto: "/images/construcao-bim.jpg",
+    alt: "Galpão industrial com estrutura metálica",
     tag: "Pilar 02 · Construção",
     eyebrow: "Construção orientada a desempenho",
     titulo: "Cada metro quadrado a favor do fluxo produtivo.",
@@ -126,10 +129,14 @@ export default function Home() {
           <div className="pillars">
             {pilares.map((p) => (
               <article className="pillar reveal" id={p.id} key={p.id}>
-                <div className="pillar-media">
-                  <Image src={p.imagem} alt={p.alt} fill sizes="(max-width: 900px) 100vw, 55vw" />
-                  <span className="tag">{p.tag}</span>
-                </div>
+                {"imagemProjeto" in p && p.imagemProjeto ? (
+                  <BimReveal obra={p.imagem} projeto={p.imagemProjeto} alt={p.alt} tag={p.tag} />
+                ) : (
+                  <div className="pillar-media">
+                    <Image src={p.imagem} alt={p.alt} fill sizes="(max-width: 900px) 100vw, 55vw" />
+                    <span className="tag">{p.tag}</span>
+                  </div>
+                )}
                 <div>
                   <span className="eyebrow">{p.eyebrow}</span>
                   <h3>{p.titulo}</h3>

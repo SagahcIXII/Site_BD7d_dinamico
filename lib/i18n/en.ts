@@ -14,6 +14,9 @@ export const en: Dict = {
     cases: "Case studies",
     contato: "Contact us",
     idioma: "Language",
+    menu: "Menu",
+    abrirMenu: "Open menu",
+    fecharMenu: "Close menu",
   },
   hero: {
     logoAlt: "BD7D Solutions",

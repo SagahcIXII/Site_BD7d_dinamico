@@ -24,7 +24,7 @@ export type Titulo = [string, string, string];
 
 export type Dict = {
   meta: { title: string; description: string };
-  nav: { energia: string; construcao: string; performance: string; cases: string; contato: string; idioma: string };
+  nav: { energia: string; construcao: string; performance: string; cases: string; contato: string; idioma: string; menu: string; abrirMenu: string; fecharMenu: string };
   hero: {
     logoAlt: string;
     intro: { linha1: string; linha2: string };

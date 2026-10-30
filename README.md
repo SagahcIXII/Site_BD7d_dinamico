@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BD7D Solutions — site institucional
 
-## Getting Started
-
-First, run the development server:
+Next.js (App Router) publicado na Vercel.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev   # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Estrutura
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `app/page.tsx` — página única: seções, pilares, processo, cases e CTA.
+- `components/scroll-hero.tsx` — hero com o vídeo controlado pelo scroll (canvas + frames WebP).
+- `lib/hero-content.ts` — textos do hero (intro e as três fases). Edite aqui.
+- `lib/contact.ts` — WhatsApp, e-mail e LinkedIn.
+- `app/globals.css` — estilos e paleta (variáveis `--accent-*` e `--petrol-*` no `:root`).
+- `public/hero-frames/` — 192 frames do hero.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Regerar os frames do hero
 
-## Learn More
+A partir dos vídeos `1.mp4` e `2.mp4` (o recorte remove a marca "Veo" do canto):
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+ffmpeg -i 1.mp4 -i 2.mp4 -filter_complex \
+  "[0:v][1:v]concat=n=2:v=1[c];[c]select='not(mod(n\,2))',crop=1760:990:40:22,scale=1600:900:flags=lanczos" \
+  -vsync vfr -q:v 2 frames/frame-%04d.jpg
+for f in frames/*.jpg; do cwebp -q 76 "$f" -o "public/hero-frames/$(basename "${f%.jpg}").webp"; done
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Se o número de frames mudar, ajuste `CONFIG.frameCount` em `components/scroll-hero.tsx`.

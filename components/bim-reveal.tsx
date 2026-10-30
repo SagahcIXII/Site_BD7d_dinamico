@@ -2,12 +2,14 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import type { Dict } from "@/lib/i18n";
 
 type Props = {
   obra: string;
   projeto: string;
   alt: string;
   tag: string;
+  t: Dict["bim"];
 };
 
 /* ============================================================
@@ -18,7 +20,7 @@ type Props = {
    pode ser arrastada (mouse, toque ou setas do teclado);
    depois disso o scroll deixa de controlá-la.
    ============================================================ */
-export function BimReveal({ obra, projeto, alt, tag }: Props) {
+export function BimReveal({ obra, projeto, alt, tag, t }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -108,17 +110,17 @@ export function BimReveal({ obra, projeto, alt, tag }: Props) {
       className="pillar-media bim-reveal"
       role="slider"
       tabIndex={0}
-      aria-label="Comparar projeto BIM e obra executada"
+      aria-label={t.aria}
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={0}
     >
-      <Image src={projeto} alt={`Modelo BIM — ${alt}`} fill sizes="(max-width: 900px) 100vw, 55vw" />
+      <Image src={projeto} alt={`${t.prefixoAlt} ${alt}`} fill sizes="(max-width: 900px) 100vw, 55vw" />
       <div className="bim-reveal-obra">
         <Image src={obra} alt={alt} fill sizes="(max-width: 900px) 100vw, 55vw" />
       </div>
-      <span className="bim-label bim-label-obra">Obra executada</span>
-      <span className="bim-label bim-label-projeto">Projeto BIM</span>
+      <span className="bim-label bim-label-obra">{t.obra}</span>
+      <span className="bim-label bim-label-projeto">{t.projeto}</span>
       <div className="bim-line" aria-hidden="true">
         <span className="bim-handle" />
       </div>

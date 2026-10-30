@@ -9,9 +9,11 @@ npm run dev   # http://localhost:3000
 
 ## Estrutura
 
-- `app/page.tsx` — página única: seções, pilares, processo, cases e CTA.
+- `app/[lang]/page.tsx` — página única: seções, pilares, processo, cases e CTA.
+- `lib/i18n/` — textos em português (`pt.ts`, servido em `/`), inglês (`en.ts`, `/en`) e espanhol (`es.ts`, `/es`).
+  Normas citadas seguem cada região: Brasil (ABNT/NR), EUA e Europa (NFPA/IEC/EN), Espanha e América Latina (UNE/IEC/NOM).
 - `components/scroll-hero.tsx` — hero com o vídeo controlado pelo scroll (canvas + frames WebP).
-- `lib/hero-content.ts` — textos do hero (intro e as três fases). Edite aqui.
+- `components/site-nav.tsx` — menu e seletor de idioma.
 - `lib/contact.ts` — WhatsApp, e-mail e LinkedIn.
 - `app/globals.css` — estilos e paleta (variáveis `--accent-*` e `--petrol-*` no `:root`).
 - `public/hero-frames/` — 192 frames do hero.

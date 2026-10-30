@@ -332,7 +332,56 @@ section.block { padding: clamp(5rem, 10vw, 8rem) 0; }
   text-transform: uppercase;
   padding: .7rem 1rem;
   color: var(--accent-300);
+  z-index: 3;
 }
+
+/* revelação projeto BIM → obra (pilar Construção) */
+.bim-reveal { --pos: 0%; cursor: ew-resize; touch-action: pan-y; user-select: none; }
+.bim-reveal:focus-visible { outline: 2px solid var(--accent-300); outline-offset: 3px; }
+.bim-reveal-obra { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+.bim-line {
+  position: absolute; top: 0; bottom: 0; left: var(--pos);
+  width: 2px; margin-left: -1px;
+  background: var(--accent-500);
+  box-shadow: 0 0 12px 2px rgba(43, 179, 131, .55);
+  z-index: 2;
+  pointer-events: none;
+}
+.bim-handle {
+  position: absolute; top: 50%; left: 50%;
+  width: 38px; height: 38px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--petrol-950);
+  border: 2px solid var(--accent-500);
+  box-shadow: 0 0 0 6px rgba(43, 179, 131, .15);
+}
+.bim-handle::before,
+.bim-handle::after {
+  content: ""; position: absolute; top: 50%;
+  border: 5px solid transparent;
+  transform: translateY(-50%);
+}
+.bim-handle::before { left: 6px; border-right-color: var(--accent-300); }
+.bim-handle::after { right: 6px; border-left-color: var(--accent-300); }
+.bim-label {
+  position: absolute; top: 1rem; z-index: 2;
+  font-family: var(--font-tech);
+  font-size: .66rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  padding: .4rem .7rem;
+  background: rgba(var(--base-rgb), .72);
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  transition: opacity .3s;
+}
+.bim-label-obra { left: 1rem; color: var(--mist-100); opacity: 0; }
+.bim-label-projeto { right: 1rem; color: var(--accent-300); opacity: 0; }
+/* cada rótulo só aparece quando seu lado tem espaço */
+.bim-reveal.show-obra .bim-label-obra,
+.bim-reveal.show-projeto .bim-label-projeto { opacity: 1; }
+
 .pillar h3 {
   font-family: var(--font-display);
   font-stretch: 108%;

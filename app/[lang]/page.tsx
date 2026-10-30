@@ -3,6 +3,7 @@ import { ScrollHero } from "@/components/scroll-hero";
 import { SiteNav } from "@/components/site-nav";
 import { RevealObserver } from "@/components/reveal-observer";
 import { BimReveal } from "@/components/bim-reveal";
+import { LoopVideo } from "@/components/loop-video";
 import { EMAIL, LINKEDIN, whatsappLink } from "@/lib/contact";
 import { getDict, type Locale, type Titulo } from "@/lib/i18n";
 
@@ -112,6 +113,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
       {/* Inovação — texto em marcador verde para ler sobre a imagem */}
       <section className="feature">
+        {/* P&D1 + P&D2 (Midias/V01) unidos, com fusão no ponto do loop */}
+        <LoopVideo className="feature-video" src="/videos/pd-lab-loop.mp4" poster="/images/pd-lab-poster.jpg" />
         <div className="wrap reveal">
           <div className="feature-copy">
             <span className="eyebrow">{t.pd.eyebrow}</span>

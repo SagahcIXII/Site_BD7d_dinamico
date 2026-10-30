@@ -1,24 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
+  axes: ["wdth"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
   subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
   title: "BD7D Solutions | Engenharia · Energia · Performance",
-  description: 
+  description:
     "Projetos inteligentes em energia, construção, automação e performance. Conectamos engenharia ao resultado do seu negócio.",
-  icons: {
-    icon: "/logo-bd7d.svg", // ou .png, se quiser usar imagem
-  },
 };
 
 export default function RootLayout({
@@ -27,10 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="pt-BR">
+      <body className={`${archivo.variable} ${plexMono.variable}`}>
         {children}
       </body>
     </html>

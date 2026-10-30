@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { heroContent } from "@/lib/hero-content";
+import type { Dict } from "@/lib/i18n";
 
 /* ============================================================
    HERO COM SCROLL-SCRUBBING
@@ -32,6 +32,14 @@ const SCROLL_MAP: [number, number][] = [
   [1.0, 1.0], // fase 3 — CLP (cena quase estática até o fim)
 ];
 
+/* Faixa do scroll (0–1) em que cada texto aparece e de que lado.
+   Os textos vêm do dicionário do idioma (lib/i18n). */
+const PHASES: { start: number; end: number; align: "start" | "end" }[] = [
+  { start: 0.09, end: 0.26, align: "end" }, // fase 1 — projeto no tablet
+  { start: 0.41, end: 0.58, align: "start" }, // fase 2 — dashboard
+  { start: 0.76, end: 0.97, align: "end" }, // fase 3 — CLP + fibra óptica
+];
+
 /* fração da fase usada para acender as palavras */
 const REVEAL_PORTION = 0.45;
 
@@ -52,7 +60,7 @@ function Words({ text }: { text: string }) {
   ));
 }
 
-export function ScrollHero() {
+export function ScrollHero({ t }: { t: Dict["hero"] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
@@ -114,7 +122,7 @@ export function ScrollHero() {
         img.src = CONFIG.framePath(i);
         img.onload = () => {
           loaded++;
-          loader.textContent = `${heroContent.ui.carregando} ${Math.round((loaded / CONFIG.frameCount) * 100)}%`;
+          loader.textContent = `${t.carregando} ${Math.round((loaded / CONFIG.frameCount) * 100)}%`;
           if (i === 1) {
             resizeCanvas();
             drawFrame(0);
@@ -169,7 +177,7 @@ export function ScrollHero() {
     /* ---------- Intro: digitação estilo terminal ---------- */
     function startTyping() {
       const lines = typeLinesRef.current.filter(Boolean) as HTMLParagraphElement[];
-      const texts = [heroContent.intro.linha1, heroContent.intro.linha2];
+      const texts = [t.intro.linha1, t.intro.linha2];
       const cursor = document.createElement("span");
       cursor.className = "cursor";
 
@@ -251,6 +259,7 @@ export function ScrollHero() {
       cancelAnimationFrame(raf);
       timers.forEach((t) => clearTimeout(t));
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- a página remonta o hero ao trocar de idioma (key)
   }, []);
 
   return (
@@ -260,19 +269,20 @@ export function ScrollHero() {
         <div className="scrub-vignette" />
 
         <div className="intro" ref={introRef}>
-          <Image src="/images/logo-dark.png" alt="BD7D Solutions" width={1200} height={560} priority />
+          <Image src="/images/logo-dark.png" alt={t.logoAlt} width={1200} height={560} priority />
           <p className="type-line" ref={(el) => { typeLinesRef.current[0] = el; }} />
           <p className="type-line" ref={(el) => { typeLinesRef.current[1] = el; }} />
         </div>
 
-        {heroContent.fases.map((fase, i) => {
+        {t.fases.map((fase, i) => {
           const Title = i === 0 ? "h1" : "h2";
+          const { start, end, align } = PHASES[i];
           return (
             <div
               key={i}
-              className={`scrub-overlay scrim${fase.align === "end" ? " align-end" : ""}`}
-              data-start={fase.start}
-              data-end={fase.end}
+              className={`scrub-overlay scrim${align === "end" ? " align-end" : ""}`}
+              data-start={start}
+              data-end={end}
               ref={(el) => { overlaysRef.current[i] = el; }}
             >
               <span className="eyebrow">{fase.eyebrow}</span>
@@ -282,9 +292,9 @@ export function ScrollHero() {
           );
         })}
 
-        <div className="scroll-hint" ref={hintRef}>{heroContent.ui.dica_scroll}</div>
+        <div className="scroll-hint" ref={hintRef}>{t.dicaScroll}</div>
         <div className="scrub-progress" ref={barRef} />
-        <div className="scrub-loader" ref={loaderRef}>{heroContent.ui.carregando} 0%</div>
+        <div className="scrub-loader" ref={loaderRef}>{t.carregando} 0%</div>
       </div>
     </section>
   );

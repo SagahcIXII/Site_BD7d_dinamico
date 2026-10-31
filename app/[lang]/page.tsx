@@ -210,7 +210,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <nav>
             <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
             {w.ativo && <a href={whatsLink(w.numero, msgs.padrao)} target="_blank" rel="noopener">WhatsApp</a>}
-            {politicaHref && <Link href={politicaHref}>{tx.privacidade.link}</Link>}
+            {politicaHref && <a href={politicaHref}>{tx.privacidade.link}</a>}
             <a href={LINKEDIN} target="_blank" rel="noopener">LinkedIn</a>
           </nav>
           <span>© {new Date().getFullYear()} BD7D Solutions · {t.rodape.local}</span>

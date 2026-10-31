@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { textosExtra } from "@/lib/textos-extra";
 import { emailValido, telefoneValido } from "@/lib/chat/tipos";
@@ -60,7 +59,7 @@ export function FormContato({ lang, politicaHref }: { lang: Locale; politicaHref
       <label className="form-consent">
         <input type="checkbox" name="consentimento" />
         <span>
-          {t.consentimento} {politicaHref ? <Link href={politicaHref}>{t.politica}</Link> : t.politica}.
+          {t.consentimento} {politicaHref ? <a href={politicaHref}>{t.politica}</a> : t.politica}.
         </span>
       </label>
       {estado === "ok" && <p className="form-aviso ok" role="status">{t.ok}</p>}

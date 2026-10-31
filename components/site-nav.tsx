@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { locales, localeInfo, type Dict, type Locale } from "@/lib/i18n";
 
@@ -17,14 +16,38 @@ const IconeChat = () => (
 );
 
 /* Seletor de idioma: pílula com indicador verde que desliza até o
-   idioma ativo. Troca de página sem voltar ao topo (scroll={false}). */
+   idioma ativo. Links comuns (<a>), não <Link>: o português é "/"
+   reescrito para "/pt" e a navegação interna do Next não segue essa
+   reescrita na Vercel (dava 404 ao voltar para PT). Para não perder o
+   ponto da página, a posição de rolagem é guardada e restaurada. */
+const CHAVE_ROLAGEM = "bd7d-rolagem-idioma";
+
 function LangSwitch({ lang, label }: { lang: Locale; label: string }) {
   const active = locales.indexOf(lang);
+
+  // ao chegar pela troca de idioma, volta para o mesmo ponto da página
+  useEffect(() => {
+    let alvo = 0;
+    try {
+      alvo = Number(sessionStorage.getItem(CHAVE_ROLAGEM) ?? 0);
+      sessionStorage.removeItem(CHAVE_ROLAGEM);
+    } catch {
+      return;
+    }
+    if (!alvo) return;
+    const fim = Date.now() + 4000;
+    const tentar = () => {
+      if (document.documentElement.scrollHeight - innerHeight >= alvo) scrollTo(0, alvo);
+      else if (Date.now() < fim) setTimeout(tentar, 150);
+    };
+    tentar();
+  }, []);
+
   return (
     <nav className="lang-switch" aria-label={label} style={{ "--i": active } as React.CSSProperties}>
       <span className="lang-indicator" aria-hidden="true" />
       {locales.map((l) => (
-        <Link
+        <a
           key={l}
           href={localeInfo[l].path}
           hrefLang={localeInfo[l].htmlLang}
@@ -32,10 +55,16 @@ function LangSwitch({ lang, label }: { lang: Locale; label: string }) {
           title={localeInfo[l].nome}
           aria-label={localeInfo[l].nome}
           aria-current={l === lang ? "page" : undefined}
-          scroll={false}
+          onClick={() => {
+            try {
+              sessionStorage.setItem(CHAVE_ROLAGEM, String(Math.round(scrollY)));
+            } catch {
+              /* sem armazenamento: só volta ao topo */
+            }
+          }}
         >
           {localeInfo[l].label}
-        </Link>
+        </a>
       ))}
     </nav>
   );

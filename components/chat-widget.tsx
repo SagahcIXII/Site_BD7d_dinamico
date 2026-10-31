@@ -135,8 +135,10 @@ export function ChatWidget({ lang }: { lang: Locale }) {
   /* ---------- helpers de conversa ---------- */
   const bot = (est: Estado, txt: string, tipo?: Item["tipo"]): Estado => ({ ...est, itens: [...est.itens, { de: "bot", texto: txt, tipo }] });
 
-  const finalizar = (est: Estado): Estado => {
-    const fim = bot(bot({ ...est, concluido: true }, t.final), t.whatsapp, "whatsapp");
+  // comMensagem=false quando a própria IA já agradeceu e encerrou
+  const finalizar = (est: Estado, comMensagem = true): Estado => {
+    const base = { ...est, concluido: true };
+    const fim = bot(comMensagem ? bot(base, t.final) : base, t.whatsapp, "whatsapp");
     setSugestoes([]);
     salvarLead(fim, true);
     return fim;
@@ -207,7 +209,7 @@ export function ChatWidget({ lang }: { lang: Locale }) {
       let prox: Estado = { ...est, dados: mesclar(est.dados, r.dados ?? {}), resumo: r.resumo || est.resumo };
       prox = bot(prox, r.resposta);
       if (r.etapa === "concluido" && leadCompleto(prox.dados) && prox.consentimento === true) {
-        setE(finalizar(prox));
+        setE(finalizar(prox, false));
       } else if (r.etapa !== "qualificando" && prox.consentimento === null) {
         setSugestoes([]);
         setE(bot(prox, t.consentimento.texto, "consentimento"));

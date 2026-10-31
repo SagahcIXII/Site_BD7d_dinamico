@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import { whatsappLink } from "@/lib/contact";
 import { textosChat, type Opcao } from "@/lib/chat/textos";
 import {
   emailValido,
@@ -59,13 +58,16 @@ const mesclar = (a: Dados, b: Record<string, string | undefined>) => {
   return out;
 };
 
-export function ChatWidget({ lang }: { lang: Locale }) {
+/* whatsapp = null quando o WhatsApp está desligado no portal */
+export function ChatWidget({ lang, whatsapp }: { lang: Locale; whatsapp: { numero: string; mensagem: string } | null }) {
   const t = textosChat[lang];
   const [aberto, setAberto] = useState(false);
   const [e, setE] = useState<Estado>(novoEstado);
   const [sugestoes, setSugestoes] = useState<Opcao[]>([]);
   const [texto, setTexto] = useState("");
   const [carregando, setCarregando] = useState(false);
+  // depois de ~meia tela de rolagem o botão flutuante some e o da barra superior assume
+  const [rolou, setRolou] = useState(false);
   const fimRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const estadoRef = useRef(e);
@@ -138,7 +140,7 @@ export function ChatWidget({ lang }: { lang: Locale }) {
   // comMensagem=false quando a própria IA já agradeceu e encerrou
   const finalizar = (est: Estado, comMensagem = true): Estado => {
     const base = { ...est, concluido: true };
-    const fim = bot(comMensagem ? bot(base, t.final) : base, t.whatsapp, "whatsapp");
+    const fim = bot(comMensagem ? bot(base, whatsapp ? t.final : t.finalSemWhats) : base, t.whatsapp, "whatsapp");
     setSugestoes([]);
     salvarLead(fim, true);
     return fim;
@@ -231,7 +233,7 @@ export function ChatWidget({ lang }: { lang: Locale }) {
   const decidir = async (aceita: boolean) => {
     let est: Estado = { ...e, consentimento: aceita, itens: [...e.itens, { de: "visitante", texto: aceita ? t.consentimento.aceitar : t.consentimento.recusar }] };
     if (!aceita) {
-      est = bot(bot({ ...est, concluido: true }, t.consentimento.recusado), t.whatsapp, "whatsapp");
+      est = bot(bot({ ...est, concluido: true }, whatsapp ? t.consentimento.recusado : t.consentimento.recusadoSemWhats), t.whatsapp, "whatsapp");
       setSugestoes([]);
       setE(est);
       return;
@@ -253,11 +255,29 @@ export function ChatWidget({ lang }: { lang: Locale }) {
     setTimeout(() => inputRef.current?.focus(), 50);
   };
 
+  // botões "Fale com a BD7D" da barra superior e do menu abrem o chat
+  const abrirRef = useRef(abrir);
+  useEffect(() => {
+    abrirRef.current = abrir;
+  });
+  useEffect(() => {
+    const h = () => abrirRef.current();
+    window.addEventListener("bd7d:abrir-chat", h);
+    return () => window.removeEventListener("bd7d:abrir-chat", h);
+  }, []);
+
   const recomecar = () => {
     const novo = bot(novoEstado(), t.saudacao);
     setE(novo);
     setSugestoes(t.sugestoesIniciais.map((s) => ({ valor: s, rotulo: s })));
   };
+
+  useEffect(() => {
+    const onScroll = () => setRolou(scrollY > innerHeight * 0.45);
+    onScroll();
+    addEventListener("scroll", onScroll, { passive: true });
+    return () => removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     if (!aberto) return;
@@ -266,13 +286,15 @@ export function ChatWidget({ lang }: { lang: Locale }) {
     return () => window.removeEventListener("keydown", esc);
   }, [aberto]);
 
-  const linkWhats = whatsappLink(t.mensagemWhatsapp(e.dados.descricao ?? ""));
+  const linkWhats = whatsapp
+    ? `https://wa.me/${whatsapp.numero}?text=${encodeURIComponent(e.dados.descricao ? t.mensagemWhatsapp(e.dados.descricao) : whatsapp.mensagem)}`
+    : null;
   const ultimoConsent = e.itens.length > 0 && e.itens[e.itens.length - 1].tipo === "consentimento";
   const bloqueado = carregando || e.concluido || ultimoConsent;
 
   return (
     <>
-      <button type="button" className={`chat-lancador${aberto ? " oculto" : ""}`} onClick={abrir} aria-label={t.botao}>
+      <button type="button" className={`chat-lancador${aberto || rolou ? " oculto" : ""}`} onClick={abrir} aria-label={t.botao}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A2.5 2.5 0 0 1 4 13.5z" />
         </svg>
@@ -300,9 +322,11 @@ export function ChatWidget({ lang }: { lang: Locale }) {
           <div className="chat-mensagens" aria-live="polite">
             {e.itens.map((m, i) =>
               m.tipo === "whatsapp" ? (
-                <a key={i} className="chat-whats" href={linkWhats} target="_blank" rel="noopener">
-                  {m.texto}
-                </a>
+                linkWhats && (
+                  <a key={i} className="chat-whats" href={linkWhats} target="_blank" rel="noopener">
+                    {m.texto}
+                  </a>
+                )
               ) : (
                 <div key={i} className={`chat-msg ${m.de}`}>
                   <p>{m.texto}</p>
@@ -358,9 +382,11 @@ export function ChatWidget({ lang }: { lang: Locale }) {
               </svg>
             </button>
           </form>
-          <a className="chat-rodape" href={linkWhats} target="_blank" rel="noopener">
-            {t.whatsappRodape} →
-          </a>
+          {linkWhats && (
+            <a className="chat-rodape" href={linkWhats} target="_blank" rel="noopener">
+              {t.whatsappRodape} →
+            </a>
+          )}
         </section>
       )}
     </>

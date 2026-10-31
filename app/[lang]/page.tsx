@@ -4,8 +4,14 @@ import { SiteNav } from "@/components/site-nav";
 import { RevealObserver } from "@/components/reveal-observer";
 import { BimReveal } from "@/components/bim-reveal";
 import { LoopVideo } from "@/components/loop-video";
-import { EMAIL, LINKEDIN, whatsappLink } from "@/lib/contact";
-import { getDict, type Locale, type Titulo } from "@/lib/i18n";
+import Link from "next/link";
+import { EMAIL, LINKEDIN } from "@/lib/contact";
+import { caseNoIdioma, getConteudo, whatsLink } from "@/lib/conteudo";
+import { textosExtra } from "@/lib/textos-extra";
+import { BotaoContato } from "@/components/botao-contato";
+import { FormContato } from "@/components/form-contato";
+import { notFound } from "next/navigation";
+import { getDict, isLocale, type Locale, type Titulo } from "@/lib/i18n";
 
 /* Imagens e âncoras de cada pilar (os textos vêm do dicionário) */
 const pilarMidia = [
@@ -26,12 +32,23 @@ const Heading = ({ titulo: [antes, destaque, depois] }: { titulo: Titulo }) => (
 );
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
-  const lang = (await params).lang as Locale; // validado no layout
+  const bruto = (await params).lang;
+  if (!isLocale(bruto)) notFound();
+  const lang: Locale = bruto;
   const t = getDict(lang);
+  const tx = textosExtra[lang];
+  const c = await getConteudo();
+  // WhatsApp desligado no portal → botões abrem o chat do site
+  const w = c.whatsapp;
+  const whats = (m: string) => (w.ativo ? whatsLink(w.numero, m) : null);
+  const msgs = w.mensagens[lang];
+  const pilarMsg = [msgs.energia, msgs.construcao, msgs.performance];
+  const prefixo = lang === "pt" ? "" : `/${lang}`;
+  const politicaHref = c.lgpd ? `${prefixo}/privacidade` : null;
 
   return (
     <>
-      <SiteNav lang={lang} t={t.nav} contatoHref={whatsappLink(t.contato.mensagemPadrao)} />
+      <SiteNav lang={lang} t={t.nav} />
       <ScrollHero key={lang} t={t.hero} />
 
       {/* Diferenciais */}
@@ -81,9 +98,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
                         </li>
                       ))}
                     </ul>
-                    <a className="link-arrow" href={whatsappLink(p.mensagem)} target="_blank" rel="noopener">
-                      {p.cta} →
-                    </a>
+                    <BotaoContato className="link-arrow" href={whats(pilarMsg[i])} rotulo={`${p.cta} →`} rotuloChat={`${p.cta} →`} />
                   </div>
                 </article>
               );
@@ -112,7 +127,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       {/* Inovação — texto em marcador verde para ler sobre a imagem */}
-      <section className="feature">
+      <section className="feature" id="projetos">
         {/* P&D1 + P&D2 (Midias/V01) unidos, com fusão no ponto do loop */}
         <LoopVideo className="feature-video" src="/videos/pd-lab-loop.mp4" poster="/images/pd-lab-poster.jpg" />
         <div className="wrap reveal">
@@ -136,14 +151,32 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             <Heading titulo={t.cases.titulo} />
           </div>
           <div className="cases">
-            {t.cases.itens.map((c, i) => (
-              <article className="case reveal" key={i}>
-                <span className="seg">{c.segmento}</span>
-                <h3>{c.titulo}</h3>
-                <p>{c.texto}</p>
-                <div className="result">{c.resultado}</div>
-              </article>
-            ))}
+            {c.cases.map((cs, i) => {
+              const x = caseNoIdioma(cs, lang);
+              const conteudo = (
+                <>
+                  {cs.capa && (
+                    <div className="case-capa">
+                      <Image src={cs.capa} alt="" fill sizes="(max-width: 900px) 100vw, 33vw" />
+                    </div>
+                  )}
+                  <span className="seg">{x.segmento}</span>
+                  <h3>{x.titulo}</h3>
+                  <p>{x.resumo}</p>
+                  {x.resultado && <div className="result">{x.resultado}</div>}
+                  {cs.slug && <span className="case-link">{tx.cases.verCase} →</span>}
+                </>
+              );
+              return cs.slug ? (
+                <Link className="case reveal" key={cs.slug} href={`${prefixo}/cases/${cs.slug}`}>
+                  {conteudo}
+                </Link>
+              ) : (
+                <article className="case reveal" key={i}>
+                  {conteudo}
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -155,9 +188,19 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             <h2>{t.cta.titulo}</h2>
             <p>{t.cta.texto}</p>
           </div>
-          <a className="btn" href={whatsappLink(t.contato.mensagemPadrao)} target="_blank" rel="noopener">
-            {t.cta.botao} →
-          </a>
+          <BotaoContato className="btn" href={whats(msgs.padrao)} rotulo={`${t.cta.botao} →`} rotuloChat={`${tx.falar} →`} />
+        </div>
+      </section>
+
+      {/* Formulário de contato */}
+      <section className="block contato" id="contato">
+        <div className="wrap contato-grade">
+          <div className="section-head reveal">
+            <span className="eyebrow">{tx.form.eyebrow}</span>
+            <h2>{tx.form.titulo}</h2>
+            <p>{tx.form.texto}</p>
+          </div>
+          <FormContato lang={lang} politicaHref={politicaHref} />
         </div>
       </section>
 
@@ -166,10 +209,12 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <Image src="/images/logo-dark.png" alt="BD7D Solutions" width={1200} height={560} />
           <nav>
             <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
-            <a href={whatsappLink()} target="_blank" rel="noopener">WhatsApp</a>
+            {w.ativo && <a href={whatsLink(w.numero, msgs.padrao)} target="_blank" rel="noopener">WhatsApp</a>}
+            {politicaHref && <Link href={politicaHref}>{tx.privacidade.link}</Link>}
             <a href={LINKEDIN} target="_blank" rel="noopener">LinkedIn</a>
           </nav>
           <span>© {new Date().getFullYear()} BD7D Solutions · {t.rodape.local}</span>
+          {c.lgpd && <p className="rodape-lgpd">{c.lgpd.textos[lang].rodape}</p>}
         </div>
       </footer>
 

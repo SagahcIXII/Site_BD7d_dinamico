@@ -5,7 +5,16 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { locales, localeInfo, type Dict, type Locale } from "@/lib/i18n";
 
-type Props = { lang: Locale; t: Dict["nav"]; contatoHref: string };
+type Props = { lang: Locale; t: Dict["nav"] };
+
+/* Abre o chat (components/chat-widget.tsx escuta este evento). */
+export const abrirChat = () => window.dispatchEvent(new Event("bd7d:abrir-chat"));
+
+const IconeChat = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A2.5 2.5 0 0 1 4 13.5z" />
+  </svg>
+);
 
 /* Seletor de idioma: pílula com indicador verde que desliza até o
    idioma ativo. Troca de página sem voltar ao topo (scroll={false}). */
@@ -35,7 +44,7 @@ function LangSwitch({ lang, label }: { lang: Locale; label: string }) {
 /* No topo (intro do hero) só o seletor de idioma e o botão de menu
    aparecem; depois de ~meia tela de scroll o menu completo entra.
    Abaixo de 900px os links vão para um painel em tela cheia. */
-export function SiteNav({ lang, t, contatoHref }: Props) {
+export function SiteNav({ lang, t }: Props) {
   const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -43,6 +52,7 @@ export function SiteNav({ lang, t, contatoHref }: Props) {
     { href: "#energia", label: t.energia },
     { href: "#construcao", label: t.construcao },
     { href: "#performance", label: t.performance },
+    { href: "#projetos", label: t.projetos },
     { href: "#cases", label: t.cases },
   ];
 
@@ -84,9 +94,11 @@ export function SiteNav({ lang, t, contatoHref }: Props) {
         </ul>
         <div className="nav-actions">
           <LangSwitch lang={lang} label={t.idioma} />
-          <a className="btn nav-fade nav-cta" href={contatoHref} target="_blank" rel="noopener">
-            {t.contato}
-          </a>
+          {/* ao rolar, o botão flutuante do chat "sobe" para cá */}
+          <button type="button" className="btn nav-fade nav-cta" onClick={abrirChat} aria-label={t.chat}>
+            <IconeChat />
+            <span>{t.chat}</span>
+          </button>
           <button
             type="button"
             className="nav-toggle"
@@ -114,9 +126,16 @@ export function SiteNav({ lang, t, contatoHref }: Props) {
             ))}
           </ol>
         </nav>
-        <a className="btn mobile-menu-cta" href={contatoHref} target="_blank" rel="noopener" onClick={() => setOpen(false)}>
-          {t.contato} →
-        </a>
+        <button
+          type="button"
+          className="btn mobile-menu-cta"
+          onClick={() => {
+            setOpen(false);
+            abrirChat();
+          }}
+        >
+          {t.chat} →
+        </button>
       </div>
     </>
   );

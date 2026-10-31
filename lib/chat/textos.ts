@@ -21,9 +21,11 @@ export type TextosChat = {
   whatsapp: string;
   whatsappRodape: string;
   mensagemWhatsapp: (resumo: string) => string;
-  consentimento: { texto: string; aceitar: string; recusar: string; recusado: string };
+  consentimento: { texto: string; aceitar: string; recusar: string; recusado: string; recusadoSemWhats: string };
   erroEnvio: string;
   final: string;
+  // versões usadas quando o WhatsApp está desligado no portal
+  finalSemWhats: string;
   validacao: { email: string; telefone: string };
   roteiro: {
     servico: { pergunta: string; opcoes: Opcao[] };
@@ -64,9 +66,11 @@ export const textosChat: Record<Locale, TextosChat> = {
       aceitar: "Concordo",
       recusar: "Prefiro não informar",
       recusado: "Sem problemas! Se preferir, fale direto com a nossa equipe pelo WhatsApp.",
+      recusadoSemWhats: "Sem problemas! Se preferir, use o formulário de contato no fim da página ou escreva para admin@bd7d.com.",
     },
     erroEnvio: "Não consegui enviar agora. Tente de novo ou fale conosco pelo WhatsApp.",
     final: "Obrigado! Recebemos suas informações e um especialista da BD7D vai entrar em contato em breve. Se quiser adiantar, é só chamar no WhatsApp.",
+    finalSemWhats: "Obrigado! Recebemos suas informações e um especialista da BD7D vai entrar em contato em breve.",
     validacao: { email: "Esse e-mail parece incompleto. Pode conferir?", telefone: "Informe o telefone com DDD, por favor." },
     roteiro: {
       servico: { pergunta: "Com qual área podemos te ajudar?", opcoes: opcoesServico("pt") },
@@ -105,9 +109,11 @@ export const textosChat: Record<Locale, TextosChat> = {
       aceitar: "I agree",
       recusar: "I'd rather not",
       recusado: "No problem! If you prefer, talk to our team directly on WhatsApp.",
+      recusadoSemWhats: "No problem! If you prefer, use the contact form at the bottom of the page or email admin@bd7d.com.",
     },
     erroEnvio: "I couldn't send that right now. Please try again or reach us on WhatsApp.",
     final: "Thank you! We've received your details and a BD7D specialist will contact you shortly. To speed things up, message us on WhatsApp.",
+    finalSemWhats: "Thank you! We've received your details and a BD7D specialist will contact you shortly.",
     validacao: { email: "That email looks incomplete. Could you check it?", telefone: "Please include the full phone number with area code." },
     roteiro: {
       servico: { pergunta: "Which area can we help you with?", opcoes: opcoesServico("en") },
@@ -146,9 +152,11 @@ export const textosChat: Record<Locale, TextosChat> = {
       aceitar: "Estoy de acuerdo",
       recusar: "Prefiero no informarlos",
       recusado: "¡Sin problema! Si prefieres, habla directo con nuestro equipo por WhatsApp.",
+      recusadoSemWhats: "¡Sin problema! Si prefieres, usa el formulario de contacto al final de la página o escribe a admin@bd7d.com.",
     },
     erroEnvio: "No pude enviarlo ahora. Inténtalo de nuevo o contáctanos por WhatsApp.",
     final: "¡Gracias! Recibimos tus datos y un especialista de BD7D se pondrá en contacto pronto. Si quieres adelantar, escríbenos por WhatsApp.",
+    finalSemWhats: "¡Gracias! Recibimos tus datos y un especialista de BD7D se pondrá en contacto pronto.",
     validacao: { email: "Ese correo parece incompleto. ¿Puedes revisarlo?", telefone: "Indica el teléfono completo con código de área, por favor." },
     roteiro: {
       servico: { pergunta: "¿En qué área podemos ayudarte?", opcoes: opcoesServico("es") },

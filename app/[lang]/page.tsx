@@ -4,7 +4,6 @@ import { SiteNav } from "@/components/site-nav";
 import { RevealObserver } from "@/components/reveal-observer";
 import { BimReveal } from "@/components/bim-reveal";
 import { LoopVideo } from "@/components/loop-video";
-import Link from "next/link";
 import { EMAIL, LINKEDIN } from "@/lib/contact";
 import { caseNoIdioma, getConteudo, whatsLink } from "@/lib/conteudo";
 import { textosExtra } from "@/lib/textos-extra";
@@ -168,9 +167,9 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
                 </>
               );
               return cs.slug ? (
-                <Link className="case reveal" key={cs.slug} href={`${prefixo}/cases/${cs.slug}`}>
+                <a className="case reveal" key={cs.slug} href={`${prefixo}/cases/${cs.slug}`}>
                   {conteudo}
-                </Link>
+                </a>
               ) : (
                 <article className="case reveal" key={i}>
                   {conteudo}

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/lib/i18n";
 import { caseNoIdioma, getConteudo, urlImagem, videoEmbed, whatsLink, type BlocoCase } from "@/lib/conteudo";
@@ -111,7 +110,7 @@ export default async function CasePage({ params }: Props) {
               {outros.map((o) => {
                 const y = caseNoIdioma(o, lang);
                 return (
-                  <Link className="case" key={o.slug} href={`${prefixo}/cases/${o.slug}`}>
+                  <a className="case" key={o.slug} href={`${prefixo}/cases/${o.slug}`}>
                     {o.capa && (
                       <div className="case-capa">
                         <Image src={o.capa} alt="" fill sizes="(max-width: 900px) 100vw, 33vw" />
@@ -120,7 +119,7 @@ export default async function CasePage({ params }: Props) {
                     <span className="seg">{y.segmento}</span>
                     <h3>{y.titulo}</h3>
                     {y.resultado && <div className="result">{y.resultado}</div>}
-                  </Link>
+                  </a>
                 );
               })}
             </div>

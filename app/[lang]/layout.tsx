@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import { getDict, isLocale, localeInfo, locales } from "@/lib/i18n";
+import { ChatWidget } from "@/components/chat-widget";
 import "../globals.css";
 
 const archivo = Archivo({
@@ -46,7 +47,10 @@ export default async function RootLayout({
 
   return (
     <html lang={localeInfo[lang].htmlLang}>
-      <body className={`${archivo.variable} ${plexMono.variable}`}>{children}</body>
+      <body className={`${archivo.variable} ${plexMono.variable}`}>
+        {children}
+        <ChatWidget lang={lang} />
+      </body>
     </html>
   );
 }

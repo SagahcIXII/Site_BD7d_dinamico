@@ -577,7 +577,32 @@ section.block { padding: clamp(5rem, 10vw, 8rem) 0; }
 .marker-soft { background: rgba(var(--base-rgb), .85); padding: .2em .45em; }
 
 /* cases */
-.cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+/* trilho: 3 cartões por vez, setas quando houver mais */
+.cases {
+  display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 2 * 1.4rem) / 3); gap: 1.4rem;
+  overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.cases::-webkit-scrollbar { display: none; }
+.cases > .case { scroll-snap-align: start; min-width: 0; }
+.carrossel-setas { display: flex; justify-content: flex-end; gap: .6rem; margin-top: 1.4rem; }
+.seta {
+  width: 2.8rem; height: 2.8rem; display: grid; place-items: center; cursor: pointer;
+  background: transparent; color: var(--mist-100); border: 1px solid var(--line); border-radius: 50%;
+  font: 600 1.1rem var(--font-display); transition: border-color .2s, color .2s, opacity .2s;
+}
+.seta:hover:not(:disabled) { border-color: var(--accent-500); color: var(--accent-300); }
+.seta:disabled { opacity: .3; cursor: default; }
+
+/* frases digitadas (projetos especiais) */
+.digitada { display: grid; }
+.digitada > .digitada-reserva, .digitada > .digitada-texto { grid-area: 1 / 1; }
+.digitada-reserva { visibility: hidden; }
+.cursor {
+  display: inline-block; width: .09em; height: 1.05em; margin-left: .08em; vertical-align: -.12em;
+  background: var(--accent-300); animation: piscar 1s steps(1) infinite;
+}
+@keyframes piscar { 50% { opacity: 0; } }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .case {
   border: 1px solid var(--line);
   padding: 2rem 1.8rem;
@@ -625,7 +650,7 @@ footer nav a:hover { color: var(--accent-300); }
   .pillar { grid-template-columns: 1fr; }
   .pillar:nth-child(even) .pillar-media { order: 0; }
   .steps { grid-template-columns: 1fr 1fr; }
-  .cases { grid-template-columns: 1fr; }
+  .cases { grid-auto-columns: 86%; gap: 1rem; }
   .cta .wrap { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 640px) {

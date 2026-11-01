@@ -5,10 +5,12 @@ import { RevealObserver } from "@/components/reveal-observer";
 import { BimReveal } from "@/components/bim-reveal";
 import { LoopVideo } from "@/components/loop-video";
 import { LINKEDIN } from "@/lib/contact";
-import { caseNoIdioma, getConteudo, whatsLink } from "@/lib/conteudo";
+import { caseNoIdioma, frasesPd, getConteudo, whatsLink } from "@/lib/conteudo";
 import { textosExtra } from "@/lib/textos-extra";
 import { BotaoContato } from "@/components/botao-contato";
 import { FormContato } from "@/components/form-contato";
+import { CarrosselCases } from "@/components/carrossel-cases";
+import { FrasesDigitadas } from "@/components/frases-digitadas";
 import { notFound } from "next/navigation";
 import { getDict, isLocale, type Locale, type Titulo } from "@/lib/i18n";
 
@@ -133,7 +135,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <div className="feature-copy">
             <span className="eyebrow">{t.pd.eyebrow}</span>
             <h2>
-              <span className="marker">{t.pd.titulo.join("")}</span>
+              <FrasesDigitadas key={lang} frases={frasesPd(c.pd, lang)} intervalo={c.pd.intervalo} />
             </h2>
             <p>
               <span className="marker-soft">{t.pd.texto}</span>
@@ -149,7 +151,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             <span className="eyebrow">{t.cases.eyebrow}</span>
             <Heading titulo={t.cases.titulo} />
           </div>
-          <div className="cases">
+          <div className="reveal">
+          <CarrosselCases rotulos={{ anterior: tx.cases.anterior, proximo: tx.cases.proximo }}>
             {c.cases.map((cs, i) => {
               const x = caseNoIdioma(cs, lang);
               const conteudo = (
@@ -167,15 +170,16 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
                 </>
               );
               return cs.slug ? (
-                <a className="case reveal" key={cs.slug} href={`${prefixo}/cases/${cs.slug}`}>
+                <a className="case" key={cs.slug} href={`${prefixo}/cases/${cs.slug}`}>
                   {conteudo}
                 </a>
               ) : (
-                <article className="case reveal" key={i}>
+                <article className="case" key={i}>
                   {conteudo}
                 </article>
               );
             })}
+          </CarrosselCases>
           </div>
         </div>
       </section>

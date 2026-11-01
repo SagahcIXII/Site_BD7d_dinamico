@@ -4,7 +4,7 @@ import { SiteNav } from "@/components/site-nav";
 import { RevealObserver } from "@/components/reveal-observer";
 import { BimReveal } from "@/components/bim-reveal";
 import { LoopVideo } from "@/components/loop-video";
-import { EMAIL, LINKEDIN } from "@/lib/contact";
+import { LINKEDIN } from "@/lib/contact";
 import { caseNoIdioma, getConteudo, whatsLink } from "@/lib/conteudo";
 import { textosExtra } from "@/lib/textos-extra";
 import { BotaoContato } from "@/components/botao-contato";
@@ -207,7 +207,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         <div className="wrap">
           <Image src="/images/logo-dark.png" alt="BD7D Solutions" width={1200} height={560} />
           <nav>
-            <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+            {c.contato.mostrarEmail && <a href={`mailto:${c.contato.email}`}>{c.contato.email}</a>}
             {w.ativo && <a href={whatsLink(w.numero, msgs.padrao)} target="_blank" rel="noopener">WhatsApp</a>}
             {politicaHref && <a href={politicaHref}>{tx.privacidade.link}</a>}
             <a href={LINKEDIN} target="_blank" rel="noopener">LinkedIn</a>

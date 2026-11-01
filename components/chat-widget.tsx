@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import { textosChat, type Opcao } from "@/lib/chat/textos";
+import { ACEITOS, MAX_ANEXOS, enviarAnexo, prepararAnexo } from "@/lib/chat/anexos-cliente";
 import {
   emailValido,
   LIMITES,
@@ -32,6 +33,7 @@ type Estado = {
   empresaPulada: boolean;
   concluido: boolean;
   resumo: string;
+  anexos?: number; // quantos arquivos o visitante já enviou
 };
 
 const CHAVE = "bd7d-chat-v1";
@@ -66,6 +68,7 @@ export function ChatWidget({ lang, whatsapp }: { lang: Locale; whatsapp: { numer
   const [sugestoes, setSugestoes] = useState<Opcao[]>([]);
   const [texto, setTexto] = useState("");
   const [carregando, setCarregando] = useState(false);
+  const [enviandoAnexo, setEnviandoAnexo] = useState(false);
   // depois de ~meia tela de rolagem o botão flutuante some e o da barra superior assume
   const [rolou, setRolou] = useState(false);
   const fimRef = useRef<HTMLDivElement>(null);
@@ -291,6 +294,22 @@ export function ChatWidget({ lang, whatsapp }: { lang: Locale; whatsapp: { numer
     : null;
   const ultimoConsent = e.itens.length > 0 && e.itens[e.itens.length - 1].tipo === "consentimento";
   const bloqueado = carregando || e.concluido || ultimoConsent;
+  // anexos só depois do "Concordo" (podem ter dados pessoais); valem
+  // também depois do lead concluído — seguem por e-mail à parte
+  const podeAnexar = e.consentimento === true && (e.anexos ?? 0) < MAX_ANEXOS && !enviandoAnexo;
+
+  const anexar = async (arquivo: File) => {
+    const pronto = await prepararAnexo(arquivo);
+    if (typeof pronto === "string") return setE((x) => bot(x, t.anexo.recusado));
+    setEnviandoAnexo(true);
+    const ok = await enviarAnexo(e.id, pronto);
+    setEnviandoAnexo(false);
+    setE((x) =>
+      ok
+        ? bot({ ...x, anexos: (x.anexos ?? 0) + 1, itens: [...x.itens, { de: "visitante", texto: `📎 ${pronto.name}` }] }, t.anexo.recebido(pronto.name))
+        : bot(x, t.anexo.falhou),
+    );
+  };
 
   return (
     <>
@@ -353,6 +372,7 @@ export function ChatWidget({ lang, whatsapp }: { lang: Locale; whatsapp: { numer
             </div>
           )}
 
+          {e.consentimento === true && !(e.anexos ?? 0) && !e.concluido && <p className="chat-dica">{t.anexo.dica}</p>}
           <form
             className="chat-entrada"
             onSubmit={(ev) => {
@@ -360,6 +380,22 @@ export function ChatWidget({ lang, whatsapp }: { lang: Locale; whatsapp: { numer
               enviar(texto);
             }}
           >
+            {e.consentimento === true && (
+              <label className={`chat-clipe${podeAnexar ? "" : " desligado"}`} aria-label={t.anexo.botao} title={t.anexo.botao}>
+                {enviandoAnexo ? "…" : "📎"}
+                <input
+                  type="file"
+                  accept={ACEITOS}
+                  hidden
+                  disabled={!podeAnexar}
+                  onChange={(ev) => {
+                    const f = ev.target.files?.[0];
+                    ev.target.value = "";
+                    if (f) anexar(f);
+                  }}
+                />
+              </label>
+            )}
             <textarea
               ref={inputRef}
               rows={1}

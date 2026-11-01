@@ -27,6 +27,7 @@ export type TextosChat = {
   // versões usadas quando o WhatsApp está desligado no portal
   finalSemWhats: string;
   validacao: { email: string; telefone: string };
+  anexo: { botao: string; recebido: (nome: string) => string; recusado: string; falhou: string; dica: string };
   roteiro: {
     servico: { pergunta: string; opcoes: Opcao[] };
     descricao: { pergunta: string };
@@ -72,6 +73,13 @@ export const textosChat: Record<Locale, TextosChat> = {
     final: "Obrigado! Recebemos suas informações e um especialista da BD7D vai entrar em contato em breve. Se quiser adiantar, é só chamar no WhatsApp.",
     finalSemWhats: "Obrigado! Recebemos suas informações e um especialista da BD7D vai entrar em contato em breve.",
     validacao: { email: "Esse e-mail parece incompleto. Pode conferir?", telefone: "Informe o telefone com DDD, por favor." },
+    anexo: {
+      botao: "Anexar arquivo",
+      recebido: (n) => `Recebi o arquivo "${n}". Ele vai junto para o especialista.`,
+      recusado: "Esse arquivo não pode ser enviado. Use PDF ou imagem de até 4 MB (máximo 5).",
+      falhou: "Não consegui enviar o arquivo agora. Tente de novo ou mande depois por e-mail.",
+      dica: "Se tiver fatura de energia, fotos do local ou um projeto, pode anexar pelo clipe 📎.",
+    },
     roteiro: {
       servico: { pergunta: "Com qual área podemos te ajudar?", opcoes: opcoesServico("pt") },
       descricao: { pergunta: "Conte rapidamente o que você precisa." },
@@ -115,6 +123,13 @@ export const textosChat: Record<Locale, TextosChat> = {
     final: "Thank you! We've received your details and a BD7D specialist will contact you shortly. To speed things up, message us on WhatsApp.",
     finalSemWhats: "Thank you! We've received your details and a BD7D specialist will contact you shortly.",
     validacao: { email: "That email looks incomplete. Could you check it?", telefone: "Please include the full phone number with area code." },
+    anexo: {
+      botao: "Attach file",
+      recebido: (n) => `Got the file "${n}". It will go to the specialist with your request.`,
+      recusado: "That file can't be sent. Use a PDF or image up to 4 MB (5 max).",
+      falhou: "I couldn't send the file right now. Please try again or email it later.",
+      dica: "If you have an energy bill, site photos or drawings, you can attach them with the clip 📎.",
+    },
     roteiro: {
       servico: { pergunta: "Which area can we help you with?", opcoes: opcoesServico("en") },
       descricao: { pergunta: "Briefly tell us what you need." },
@@ -158,6 +173,13 @@ export const textosChat: Record<Locale, TextosChat> = {
     final: "¡Gracias! Recibimos tus datos y un especialista de BD7D se pondrá en contacto pronto. Si quieres adelantar, escríbenos por WhatsApp.",
     finalSemWhats: "¡Gracias! Recibimos tus datos y un especialista de BD7D se pondrá en contacto pronto.",
     validacao: { email: "Ese correo parece incompleto. ¿Puedes revisarlo?", telefone: "Indica el teléfono completo con código de área, por favor." },
+    anexo: {
+      botao: "Adjuntar archivo",
+      recebido: (n) => `Recibí el archivo "${n}". Irá junto al especialista.`,
+      recusado: "Ese archivo no se puede enviar. Usa PDF o imagen de hasta 4 MB (máximo 5).",
+      falhou: "No pude enviar el archivo ahora. Inténtalo de nuevo o envíalo luego por correo.",
+      dica: "Si tienes la factura de energía, fotos del lugar o un proyecto, puedes adjuntarlos con el clip 📎.",
+    },
     roteiro: {
       servico: { pergunta: "¿En qué área podemos ayudarte?", opcoes: opcoesServico("es") },
       descricao: { pergunta: "Cuéntanos brevemente qué necesitas." },

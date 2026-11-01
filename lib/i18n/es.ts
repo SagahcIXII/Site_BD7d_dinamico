@@ -54,7 +54,7 @@ export const es: Dict = {
       texto: "IEC 62305 y REBT en España, NOM-001-SEDE en México y requisitos de la distribuidora desde el primer plano.",
     },
     { titulo: "Enfoque en resultados", texto: "Cada entrega medida en costo de energía, disponibilidad y margen." },
-    { titulo: "Con sede en Brasil", texto: "Base en Manaos, con soporte de ingeniería remoto para proyectos internacionales." },
+    { titulo: "Sede en Brasil, alcance global", texto: "Base en Manaos y proyectos en todo Brasil y en el exterior — en campo o con ingeniería remota." },
   ],
   servicos: {
     eyebrow: "Qué hacemos",
@@ -174,5 +174,5 @@ export const es: Dict = {
     botao: "Hablar por WhatsApp",
   },
   contato: { mensagemPadrao: "Hola, llegué por el sitio web de BD7D Solutions y me gustaría saber más." },
-  rodape: { local: "Manaos, Brasil" },
+  rodape: { local: "Manaos, Brasil · Atención nacional e internacional" },
 };

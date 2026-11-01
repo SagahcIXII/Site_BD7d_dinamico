@@ -22,7 +22,12 @@ export async function POST(request: Request) {
     const res = await fetch(`${gestaoUrl()}/api/leads/contato`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ idioma: typeof corpo.idioma === "string" && isLocale(corpo.idioma) ? corpo.idioma : "pt", consentimento: true, dados }),
+      body: JSON.stringify({
+        idioma: typeof corpo.idioma === "string" && isLocale(corpo.idioma) ? corpo.idioma : "pt",
+        conversaId: typeof corpo.conversaId === "string" ? corpo.conversaId.slice(0, 70) : undefined,
+        consentimento: true,
+        dados,
+      }),
       signal: AbortSignal.timeout(10_000),
     });
     if (!res.ok) throw new Error(String(res.status));

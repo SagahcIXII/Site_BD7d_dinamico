@@ -15,7 +15,8 @@ export type ConfigLgpd = { ativo: boolean; textos: PorIdioma<{ rodape: string; p
 export type BlocoCase = { tipo: "paragrafo" | "subtitulo" | "lista" | "imagem" | "video"; texto?: string; imagemId?: number; legenda?: string; url?: string };
 export type ConteudoCase = { segmento: string; titulo: string; resumo: string; resultado: string; blocos: BlocoCase[] };
 export type CaseSite = { slug: string; capa: string | null; conteudo: { pt: ConteudoCase } & Partial<Record<"en" | "es", ConteudoCase>> };
-export type ConteudoSite = { whatsapp: ConfigWhatsapp; lgpd: ConfigLgpd | null; cases: CaseSite[]; doPortal: boolean };
+export type ConfigContato = { mostrarEmail: boolean; email: string };
+export type ConteudoSite = { whatsapp: ConfigWhatsapp; lgpd: ConfigLgpd | null; contato: ConfigContato; cases: CaseSite[]; doPortal: boolean };
 
 export const gestaoUrl = () => (process.env.GESTAO_URL ?? "https://app.bd7d.com").replace(/\/$/, "");
 
@@ -29,6 +30,7 @@ function padrao(): ConteudoSite {
   return {
     whatsapp: { ativo: true, numero: "5592981649981", mensagens: { pt: msgs("pt"), en: msgs("en"), es: msgs("es") } },
     lgpd: null,
+    contato: { mostrarEmail: true, email: "admin@bd7d.com" },
     cases: pt.map((c, i) => ({
       slug: "",
       capa: null,
@@ -50,7 +52,7 @@ export async function getConteudo(): Promise<ConteudoSite> {
     const d = (await res.json()) as Omit<ConteudoSite, "doPortal">;
     // imagens com endereço completo do portal
     const cases = d.cases.map((c) => ({ ...c, capa: c.capa ? `${gestaoUrl()}${c.capa}` : null }));
-    return { ...d, cases, lgpd: d.lgpd?.ativo ? d.lgpd : null, doPortal: true };
+    return { ...d, cases, lgpd: d.lgpd?.ativo ? d.lgpd : null, contato: d.contato ?? { mostrarEmail: true, email: "admin@bd7d.com" }, doPortal: true };
   } catch (e) {
     console.error("conteúdo do portal indisponível, usando padrão:", e);
     return padrao();

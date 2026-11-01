@@ -16,9 +16,16 @@ export type BlocoCase = { tipo: "paragrafo" | "subtitulo" | "lista" | "imagem" |
 export type ConteudoCase = { segmento: string; titulo: string; resumo: string; resultado: string; blocos: BlocoCase[] };
 export type CaseSite = { slug: string; capa: string | null; conteudo: { pt: ConteudoCase } & Partial<Record<"en" | "es", ConteudoCase>> };
 export type ConfigContato = { mostrarEmail: boolean; email: string };
-export type ConteudoSite = { whatsapp: ConfigWhatsapp; lgpd: ConfigLgpd | null; contato: ConfigContato; cases: CaseSite[]; doPortal: boolean };
+export type ConfigPd = { frases: PorIdioma<string[]>; intervalo: number };
+export type ConteudoSite = { whatsapp: ConfigWhatsapp; lgpd: ConfigLgpd | null; contato: ConfigContato; pd: ConfigPd; cases: CaseSite[]; doPortal: boolean };
 
 export const gestaoUrl = () => (process.env.GESTAO_URL ?? "https://app.bd7d.com").replace(/\/$/, "");
+
+/* Frase fixa do dicionário (antes das frases do portal) */
+const pdPadrao = (): ConfigPd => ({
+  intervalo: 4,
+  frases: { pt: [getDict("pt").pd.titulo.join("")], en: [getDict("en").pd.titulo.join("")], es: [getDict("es").pd.titulo.join("")] },
+});
 
 /* Padrões = o que o site mostrava antes do portal */
 function padrao(): ConteudoSite {
@@ -31,6 +38,7 @@ function padrao(): ConteudoSite {
     whatsapp: { ativo: true, numero: "5592981649981", mensagens: { pt: msgs("pt"), en: msgs("en"), es: msgs("es") } },
     lgpd: null,
     contato: { mostrarEmail: true, email: "admin@bd7d.com" },
+    pd: pdPadrao(),
     cases: pt.map((c, i) => ({
       slug: "",
       capa: null,
@@ -52,12 +60,18 @@ export async function getConteudo(): Promise<ConteudoSite> {
     const d = (await res.json()) as Omit<ConteudoSite, "doPortal">;
     // imagens com endereço completo do portal
     const cases = d.cases.map((c) => ({ ...c, capa: c.capa ? `${gestaoUrl()}${c.capa}` : null }));
-    return { ...d, cases, lgpd: d.lgpd?.ativo ? d.lgpd : null, contato: d.contato ?? { mostrarEmail: true, email: "admin@bd7d.com" }, doPortal: true };
+    return { ...d, cases, lgpd: d.lgpd?.ativo ? d.lgpd : null, contato: d.contato ?? { mostrarEmail: true, email: "admin@bd7d.com" }, pd: d.pd ?? pdPadrao(), doPortal: true };
   } catch (e) {
     console.error("conteúdo do portal indisponível, usando padrão:", e);
     return padrao();
   }
 }
+
+/* Frases de projetos especiais no idioma; sem frases, usa a do dicionário. */
+export const frasesPd = (pd: ConfigPd, l: Locale): string[] => {
+  const f = (pd.frases[l] ?? []).filter((x) => x.trim());
+  return f.length ? f : pdPadrao().frases[l];
+};
 
 /* Case no idioma pedido; sem tradução, usa o português. */
 export const caseNoIdioma = (c: CaseSite, l: Locale): ConteudoCase => c.conteudo[l] ?? c.conteudo.pt;

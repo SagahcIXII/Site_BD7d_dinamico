@@ -25,7 +25,7 @@ export type TextosExtra = {
     anexoRecusado: string;
     anexoFalhou: string;
   };
-  cases: { verCase: string; voltar: string; resultado: string; outros: string };
+  cases: { verCase: string; voltar: string; resultado: string; outros: string; anterior: string; proximo: string };
   privacidade: { titulo: string; link: string; voltar: string };
   falar: string;
 };
@@ -54,7 +54,7 @@ export const textosExtra: Record<Locale, TextosExtra> = {
       anexoRecusado: "Use PDF ou imagem de até 4 MB (máximo 5 arquivos).",
       anexoFalhou: "A mensagem foi enviada, mas algum anexo não chegou. Se precisar, envie por e-mail.",
     },
-    cases: { verCase: "Ver o case completo", voltar: "← Voltar aos cases", resultado: "Resultado", outros: "Outros cases" },
+    cases: { verCase: "Ver o case completo", voltar: "← Voltar aos cases", resultado: "Resultado", outros: "Outros cases", anterior: "Cases anteriores", proximo: "Próximos cases" },
     privacidade: { titulo: "Política de privacidade", link: "Política de privacidade", voltar: "← Voltar ao site" },
     falar: "Fale com a BD7D",
   },
@@ -81,7 +81,7 @@ export const textosExtra: Record<Locale, TextosExtra> = {
       anexoRecusado: "Use a PDF or image up to 4 MB (5 files max).",
       anexoFalhou: "Your message was sent, but an attachment didn't arrive. If needed, send it by email.",
     },
-    cases: { verCase: "Read the full case", voltar: "← Back to case studies", resultado: "Result", outros: "More case studies" },
+    cases: { verCase: "Read the full case", voltar: "← Back to case studies", resultado: "Result", outros: "More case studies", anterior: "Previous case studies", proximo: "Next case studies" },
     privacidade: { titulo: "Privacy policy", link: "Privacy policy", voltar: "← Back to the site" },
     falar: "Talk to BD7D",
   },
@@ -108,7 +108,7 @@ export const textosExtra: Record<Locale, TextosExtra> = {
       anexoRecusado: "Use PDF o imagen de hasta 4 MB (máximo 5 archivos).",
       anexoFalhou: "El mensaje fue enviado, pero algún adjunto no llegó. Si lo necesita, envíelo por correo.",
     },
-    cases: { verCase: "Ver el caso completo", voltar: "← Volver a los casos", resultado: "Resultado", outros: "Otros casos" },
+    cases: { verCase: "Ver el caso completo", voltar: "← Volver a los casos", resultado: "Resultado", outros: "Otros casos", anterior: "Casos anteriores", proximo: "Siguientes casos" },
     privacidade: { titulo: "Política de privacidad", link: "Política de privacidad", voltar: "← Volver al sitio" },
     falar: "Habla con BD7D",
   },

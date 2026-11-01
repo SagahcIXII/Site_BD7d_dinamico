@@ -52,7 +52,7 @@ export const pt: Dict = {
     { titulo: "Engenharia integrada", texto: "Elétrica, civil e automação no mesmo projeto, sem retrabalho entre disciplinas." },
     { titulo: "Conformidade técnica", texto: "NBR 5419, NBR 5410, NR-10 e exigências da concessionária desde o primeiro traço." },
     { titulo: "Foco em resultado", texto: "Cada entrega medida em custo de energia, disponibilidade e margem." },
-    { titulo: "Atuação regional", texto: "Base em Manaus, atendendo a indústria do Polo Industrial e região Norte." },
+    { titulo: "Atuação nacional e internacional", texto: "Base em Manaus e projetos em todo o Brasil e no exterior — em campo ou com engenharia remota." },
   ],
   servicos: {
     eyebrow: "O que fazemos",
@@ -160,5 +160,5 @@ export const pt: Dict = {
     botao: "Falar no WhatsApp",
   },
   contato: { mensagemPadrao: "Olá, vim pelo site da BD7D Solutions e gostaria de saber mais." },
-  rodape: { local: "Manaus – AM" },
+  rodape: { local: "Manaus, Brasil · Atuação nacional e internacional" },
 };

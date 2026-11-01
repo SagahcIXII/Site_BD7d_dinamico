@@ -54,7 +54,7 @@ export const en: Dict = {
       texto: "NEC (NFPA 70), NFPA 70E and NFPA 780 in the U.S.; IEC 60364 and EN 62305 in Europe — from the first drawing.",
     },
     { titulo: "Results-driven", texto: "Every deliverable measured in energy cost, uptime and margin." },
-    { titulo: "Based in Brazil", texto: "Headquartered in Manaus, with remote engineering support for international projects." },
+    { titulo: "Brazil-based, global reach", texto: "Headquartered in Manaus, delivering projects across Brazil and abroad — on site or through remote engineering." },
   ],
   servicos: {
     eyebrow: "What we do",
@@ -171,5 +171,5 @@ export const en: Dict = {
     botao: "Chat on WhatsApp",
   },
   contato: { mensagemPadrao: "Hello, I found BD7D Solutions through your website and would like to know more." },
-  rodape: { local: "Manaus, Brazil" },
+  rodape: { local: "Manaus, Brazil · Serving clients in Brazil and worldwide" },
 };
